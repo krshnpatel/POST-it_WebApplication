@@ -18,10 +18,10 @@ var port = process.env.PORT || 8080; // Set our port
 
 // Connecting to MongoDB
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/bears');
+mongoose.connect('mongodb://localhost:27017/msgs');
 
-// Adding bear.js
-var Bear = require('./app/models/bear');
+// Adding msg.js
+var Msg = require('./app/models/msg');
 
 
 // ROUTES FOR OUR API
@@ -45,85 +45,85 @@ router.get('/', function(req, res) {
 
 // More routes for our API will happen here
 
-// On routes that end in /bears
+// On routes that end in /msgs
 // ---------------------------------------------
-router.route('/bears')
+router.route('/msgs')
     
-    // Create a bear (accessed at POST https://se3316a-lab3-kpate222.c9users.io/api/bears)
+    // Create a msg (accessed at POST https://se3316a-lab3-kpate222.c9users.io/api/msgs)
     .post(function(req, res) {
         
-        var bear = new Bear(); // Create a new instance of the Bear model
-        bear.name = req.body.name; // Set the bear's name (comes from the request)
+        var msg = new Msg(); // Create a new instance of the Msg model
+        msg.name = req.body.name; // Set the msg's name (comes from the request)
         
-        // Save the bear and check for errors
-        bear.save(function(err) {
+        // Save the msg and check for errors
+        msg.save(function(err) {
             if (err)
             {
                 res.send(err);
             }
                 
-            res.json({ message: 'Bear created!' });
+            res.json({ message: 'Msg created!' });
         });
     })
     
-    // Get all the bears (accessed at GET https://se3316a-lab3-kpate222.c9users.io/api/bears)
+    // Get all the msgs (accessed at GET https://se3316a-lab3-kpate222.c9users.io/api/msgs)
     .get(function(req, res) {
-        Bear.find(function(err, bears) {
+        Msg.find(function(err, msgs) {
             if (err)
             {
                 res.send(err);
             }
             
-            res.json(bears);
+            res.json(msgs);
         });
     });
     
-// On routes that end in /bears/:bear_id
+// On routes that end in /msgs/:msg_id
 // ---------------------------------------------
-router.route('/bears/:bear_id')
+router.route('/msgs/:msg_id')
 
-    // Get the bear with the specified id (accessed at GET https://se3316a-lab3-kpate222.c9users.io/api/bears/:bear_id)
+    // Get the msg with the specified id (accessed at GET https://se3316a-lab3-kpate222.c9users.io/api/msgs/:msg_id)
     .get(function(req, res) {
-        Bear.findById(req.params.bear_id, function(err, bear) {
+        Msg.findById(req.params.msg_id, function(err, msg) {
             if (err)
             {
                 res.send(err);
             }
                 
-            res.json(bear);
+            res.json(msg);
         });
     })
     
-    // Update the bear with the specified id (accessed at PUT https://se3316a-lab3-kpate222.c9users.io/api/bears/:bear_id)
+    // Update the msg with the specified id (accessed at PUT https://se3316a-lab3-kpate222.c9users.io/api/msgs/:msg_id)
     .put(function(req, res) {
 
-        // Use our bear model to find the bear we want
-        Bear.findById(req.params.bear_id, function(err, bear) {
+        // Use our msg model to find the msg we want
+        Msg.findById(req.params.msg_id, function(err, msg) {
 
             if (err)
             {
                 res.send(err);
             }
             
-            bear.name = req.body.name;  // Update the bear's info
+            msg.name = req.body.name;  // Update the msg's info
 
-            // Save the bear
-            bear.save(function(err) {
+            // Save the msg
+            msg.save(function(err) {
                 if (err) 
                 {
                     res.send(err);
                 }
 
-                res.json({ message: 'Bear updated!' });
+                res.json({ message: 'Msg updated!' });
             });
         });
     })
     
-    // Delete the bear with this id (accessed at DELETE https://se3316a-lab3-kpate222.c9users.io/api/bears/:bear_id)
+    // Delete the msg with this id (accessed at DELETE https://se3316a-lab3-kpate222.c9users.io/api/msgs/:msg_id)
     .delete(function(req, res) {
-        Bear.remove({
-            _id: req.params.bear_id
-        }, function(err, bear) {
+        Msg.remove({
+            _id: req.params.msg_id
+        }, function(err, msg) {
             if (err) 
             {
                 res.send(err);
