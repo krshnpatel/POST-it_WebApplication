@@ -61,8 +61,16 @@ router.route('/msgs')
             {
                 res.send(err);
             }
+            
+            Msg.find(function (err, msgs) {
+                if (err)
+                {
+                    res.send(err);
+                }
                 
-            res.json({ message: 'Msg created!' });
+                res.json(msgs);
+            });
+            //res.json({ message: 'Msg created!' });
         });
     })
     
@@ -114,7 +122,7 @@ router.route('/msgs/:msg_id')
                     res.send(err);
                 }
 
-                res.json({ message: 'Msg updated!' });
+                //res.json({ message: 'Msg updated!' });
             });
         });
     })
@@ -128,8 +136,8 @@ router.route('/msgs/:msg_id')
             {
                 res.send(err);
             }
-
-            res.json({ message: 'Successfully deleted' });
+            
+            //res.json({ message: 'Successfully deleted' });
         });
     });
     
@@ -155,3 +163,6 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
+
+
+
