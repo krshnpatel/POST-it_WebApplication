@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var MsgSchema = new Schema({
-    name: String
+    name: String,
+    key: String
 });
 
 module.exports = mongoose.model('Msg', MsgSchema);

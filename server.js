@@ -54,6 +54,7 @@ router.route('/msgs')
         
         var msg = new Msg(); // Create a new instance of the Msg model
         msg.name = req.body.name; // Set the msg's name (comes from the request)
+        msg.key = req.body.key;
         
         // Save the msg and check for errors
         msg.save(function(err) {
@@ -136,6 +137,18 @@ router.route('/msgs/:msg_id')
 
 // REGISTER OUR ROUTES -------------------------
 // All of our routes will be prefixed with /api
+app.use(function (req, res, next) {
+    // Website I want to allow, * means allow all
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // Request methods that are allowed
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers allowed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    // Passing to next layer of the middleware software
+    next();
+});
+app.use('/public', express.static('public'));
 app.use('/api', router);
 
 
@@ -143,6 +156,3 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
-
-
