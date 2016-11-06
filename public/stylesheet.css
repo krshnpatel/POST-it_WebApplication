@@ -1,10 +1,13 @@
 h1 {
     color: #FF8000;
     margin-bottom: 40px;
+    font-weight: bold;
+    font-size: 80px;
 }
 
 #submitForm {
     font-size: 18px;
+    font-weight: bold;
     padding: 1% 20%;
 }
 
@@ -19,6 +22,7 @@ h1 {
     margin-top: 30px;
     padding-left: 20%;
     padding-right: 20%;
+    margin-bottom: 50px;
 }
 
 .submittedText {
@@ -34,10 +38,7 @@ h1 {
     margin-bottom: 5px;
 }
 
-.submitButton {
-    background-color: #404040;
-    padding-bottom: 5px;
-    padding-top: 5px;
+strong {
     font-size: 18px;
 }
 

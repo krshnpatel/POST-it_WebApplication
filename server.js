@@ -53,8 +53,7 @@ router.route('/msgs')
     .post(function(req, res) {
         
         var msg = new Msg(); // Create a new instance of the Msg model
-        msg.name = req.body.name; // Set the msg's name (comes from the request)
-        msg.key = req.body.key;
+        msg.key = req.body.key; // Set the msg's key (comes from the request)
         
         // Save the msg and check for errors
         msg.save(function(err) {
@@ -106,7 +105,7 @@ router.route('/msgs/:msg_id')
                 res.send(err);
             }
             
-            msg.name = req.body.name;  // Update the msg's info
+            msg.key = req.body.key;  // Update the msg's info
 
             // Save the msg
             msg.save(function(err) {

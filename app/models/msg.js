@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var MsgSchema = new Schema({
-    name: String,
     key: String
 });
 

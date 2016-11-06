@@ -2,8 +2,9 @@ function executeGET()
 {
     $.get("https://se3316a-lab3-kpate222.c9users.io/api/msgs", function(data, status) {
         console.log(data);
-        displayMessages(data);
         //executeDELETEall(data);
+        displayMessages(data);
+        //setTimeout(executeGET(), 1000);
     });
 }
 
@@ -12,13 +13,44 @@ function executePOST(userText)
     $.post("https://se3316a-lab3-kpate222.c9users.io/api/msgs",
     {
         key: userText.substring(1)
-    },
-    executeGET());
+    });
+}
+
+function executeDELETE(msg_id)
+{
+    $.ajax({
+        url: 'https://se3316a-lab3-kpate222.c9users.io/api/msgs/' + msg_id,
+        type: 'DELETE',
+        success: function(result) {
+            console.log(result);
+        }
+    });
+}
+
+function getMsgId(key)
+{
+    $.get("https://se3316a-lab3-kpate222.c9users.io/api/msgs", function(data, status) {
+        
+        for (let i = 0; i < data.length; i++)
+        {
+            if (data[i].key == key)
+            {
+                return data[i]._id;
+            }
+        }
+        
+    });
 }
 
 function displayMessages(msgs)
 {
-    for (let i = 0; i < msgs.length; i++)
+    var endpoint = 0;
+    if (msgs.length > 20)
+    {
+        endpoint = msgs.length - 20;
+    }
+    
+    for (let i = msgs.length - 1; i >= endpoint; i--)
     {
         if (!document.body.contains(document.getElementById(msgs[i].key)))
         {
@@ -38,15 +70,22 @@ function displayMessages(msgs)
 }
 
 function verifyMessage(userText) {
-    if (userText.charAt(0) == '#')
+    if (userText.charAt(0) == '#' && (userText.length > 1 && userText.length <= 200))
     {
         // Also check for userText inside database; if it exists then delete old one and add again
-        console.log("Good");
-        return true;
+        if (document.body.contains(document.getElementById(userText.substring(1))))
+        {
+            executeDELETE(getMsgId(userText.substring(1)));
+            return true;
+        }
+        else
+        {
+            return true;
+        }
     }
     else
     {
-        console.log("Start with a #");
+        alert("Please enter text following a # (max 200 characters)");
         return false;
     }
 }
@@ -56,14 +95,26 @@ $(document).ready(function() {
     executeGET();
     
     $('#submitButton').click(function(e) {
-        if (verifyMessage($('#userText').val()))
+        var userText = $('#userText').val();
+        
+        if (verifyMessage(userText))
         {
-            executePOST($('#userText').val());
+            executePOST(userText);
         }
+        
+        $('#userText').val("");
     });
     
     $('#userText').bind("enterKey",function(e) {
         
+        var userText = $('#userText').val();
+        
+        if (verifyMessage(userText))
+        {
+            executePOST(userText);
+        }
+        
+        $('#userText').val("");
     });
     
     $('#userText').keyup(function(e) {
