@@ -1,14 +1,3 @@
-/*function executeGET()
-{
-    $.get("https://se3316a-lab3-kpate222.c9users.io/api/msgs", function(data, status) {
-        console.log(data);
-        //executeDELETEall(data);
-        displayMessages(data);
-    });
-}*/
-
-//var msgs;
-
 function executeGET(call)
 {
     $.ajax({
@@ -17,17 +6,20 @@ function executeGET(call)
         complete: function(result) {
             var data = JSON.parse(result.responseText);
             console.log("GET");
-            console.log(data);
+            console.log(data.length);
+            
             if (call == "first")
             {
                 displayMessages(data, "append");
             }
             else
             {
-                displayMessages(data, "insert");
+                deleteAllElements();
+                displayMessages(data, "append");
             }
-            executeDELETEall(data);
-            //setTimeout(executeGET, 1000);
+            
+            //executeDELETEall(data);
+            setTimeout(executeGET, 1000);
         }
     });
 }
@@ -41,12 +33,12 @@ function executePOST(userText, afterDelete)
         complete: function(result)
         {
             var data = JSON.parse(result.responseText);
-            if (!afterDelete)
-            {
-                displayMessages(data, "insert");
-            }
+            
             console.log("POST");
             console.log(data);
+            
+            deleteAllElements();
+            displayMessages(data, "append");
         },
     });
 }
@@ -81,37 +73,18 @@ function getMsgId(key)
                 {
                     console.log("get id - " + data[i]._id);
                     executeDELETE(data[i]._id);
-                    document.getElementById('messages').insertBefore(document.getElementById(data[i].key), document.getElementById('messages').childNodes.item(0));
                 }
             }
         }
     });
-    
-    
-    /*$.get("https://se3316a-lab3-kpate222.c9users.io/api/msgs", function(data, status) {
-        
-        for (var i = 0; i < data.length; i++)
-        {
-            if (data[i].key == key)
-            {
-                console.log("get id" + data[i]._id);
-                return data[i]._id;
-            }
-        }
-    });*/
 }
 
-function displayMessages(msgs, sortMethod)//(msgs)
+function displayMessages(msgs, sortMethod)
 {
     var endpoint = 0;
     if (msgs.length > 20)
     {
         endpoint = msgs.length - 20;
-        
-        if (document.getElementById('messages').childNodes.item(19) != null)
-        {
-            document.getElementById('messages').removeChild(document.getElementById('messages').childNodes.item(19));
-        }
     }
     
     console.log(endpoint);
@@ -126,6 +99,8 @@ function displayMessages(msgs, sortMethod)//(msgs)
             newMsg.className = 'text-center submittedText';
             newMsg.textContent = "#" + msgs[i].key;
             
+            console.log("adding element");
+            
             if (sortMethod == "append")
             {
                 document.getElementById('messages').appendChild(newMsg);
@@ -138,32 +113,23 @@ function displayMessages(msgs, sortMethod)//(msgs)
     }
 }
 
-/*function sortMessageElements(msgs)
+function deleteAllElements()
 {
-    var endpoint = 0;
-    if (msgs.length > 20)
-    {
-        endpoint = msgs.length - 20;
-    }
+    var messages = document.getElementById('messages');
     
-    for (var i = msgs.length - 1; i >= endpoint; i--)
+    while (messages.firstChild)
     {
-        //$('#messages').
+        messages.removeChild(messages.firstChild);
     }
-}*/
+}
 
 function verifyMessage(userText) {
     if (userText.charAt(0) == '#' && (userText.length > 1 && userText.length <= 200))
     {
-        // Also check for userText inside database; if it exists then delete old one and add again
         if (document.body.contains(document.getElementById(userText.substring(1))))
         {
-            //var msgId = 
             getMsgId(userText.substring(1));
-            //executeDELETE(msgId);
-            //console.log(msgId);
-            executePOST(userText, true);
-            return false;
+            return true;
         }
         else
         {
